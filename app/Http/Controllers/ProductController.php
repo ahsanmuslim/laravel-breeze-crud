@@ -14,7 +14,9 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        return view('products.index',[
+            "products" => Product::all()
+        ]);
     }
 
     /**
@@ -24,7 +26,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -35,7 +37,16 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // dd($request);
+        $dataValidated = $request->validate([
+            'name' => 'required|string',
+            'category' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        Product::create($dataValidated);
+
+        return redirect('/products')->with('message', 'Data berhasil di simpan');
     }
 
     /**
@@ -57,7 +68,9 @@ class ProductController extends Controller
      */
     public function edit(Product $product)
     {
-        //
+        return view('products.edit', [
+            'product' => $product
+        ]);
     }
 
     /**
@@ -69,7 +82,16 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
-        //
+        // dd($request);
+        $dataValidated = $request->validate([
+            'name' => 'required|string',
+            'category' => 'required|string',
+            'price' => 'required|numeric',
+        ]);
+
+        Product::where('id', $product->id)->update($dataValidated);
+
+        return redirect('/products')->with('message', 'Data berhasil di update');
     }
 
     /**
@@ -80,6 +102,8 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        Product::destroy($product->id);
+
+        return redirect('/products')->with('message', 'Data berhasil dihapus');
     }
 }
